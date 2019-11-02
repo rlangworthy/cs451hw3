@@ -21,7 +21,7 @@
 int N;  /* Matrix size */
 
 /* Matrices and vectors */
-volatile float A[MAXN][MAXN], B[MAXN], X[MAXN];
+float A[MAXN][MAXN], B[MAXN], X[MAXN];
 /* A * X = B, solve for X */
 
 /* junk */
@@ -132,21 +132,21 @@ int main(int argc, char **argv) {
   unsigned long long usecstart, usecstop;
   struct tms cputstart, cputstop;  /* CPU times for my processes */
   double etstart, etstop;
-
+  printf("Hello");
   MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
   MPI_Comm_rank(MPI_COMM_WORLD,&myid);
   if(myid=0){
-  /* Process program parameters */
-  parameters(argc, argv);
+    /* Process program parameters */
+    parameters(argc, argv);
 
-  /* Initialize A and B */
-  initialize_inputs();
+    /* Initialize A and B */
+    initialize_inputs();
 
-  /* Print input matrices */
-  print_inputs();
+    /* Print input matrices */
+    print_inputs();
 
-  etstart = MPI_Wtime();
+    etstart = MPI_Wtime();
   }
   /* Start Clock */
 
@@ -157,7 +157,7 @@ int main(int argc, char **argv) {
 
   if(myid==0){
     etstop = MPI_Wtime();
-    printf('Time Elapsed: %1.2f\n', etstop-etstart);
+    printf("Time Elapsed: %1.2f\n", etstop-etstart);
     /* Display output */
     print_X();
 
