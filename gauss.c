@@ -162,6 +162,7 @@ int main(int argc, char **argv) {
   printf("hello from %i before bcast\n", myid);
   MPI_Bcast(&A[0][0], MAXN*MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
   MPI_Bcast(&B, MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&N, 1, MPI_INT, 0, MPI_COMM_WORLD);
   /* Gaussian elimination */
   printf("hello from %i after bcast\n", myid);
   for(norm = 0; norm < N - 1; norm++) {
