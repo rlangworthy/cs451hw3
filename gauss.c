@@ -172,11 +172,11 @@ int main(int argc, char **argv) {
       }
       B[row] -= B[norm] * multiplier;
     }
-    for (row = norm + 1 + myid; row < N; row += numprocs){
-      MPI_Bcast(&A[row], MAXN, MPI_FLOAT, myid, MPI_COMM_WORLD);
-      MPI_Bcast(&B[row], 1, MPI_FLOAT, myid, MPI_COMM_WORLD);
+    for (row = norm + 1; row < N; row ++){
+      MPI_Bcast(&A[row], MAXN, MPI_FLOAT, (row-norm+1) % numprocs, MPI_COMM_WORLD);
+      MPI_Bcast(&B[row], 1, MPI_FLOAT, (row-norm+1) % numprocs, MPI_COMM_WORLD);
     }
-    MPI_Barrier(MPI_COMM_WORLD);
+    //MPI_Barrier(MPI_COMM_WORLD);
 
   }
 
