@@ -167,7 +167,6 @@ int main(int argc, char **argv) {
   for(norm = 0; norm < N - 1; norm++) {
     MPI_Barrier(MPI_COMM_WORLD);
     for (row = norm + 1 + myid; row < N; row += numprocs) {
-      printf("row %i on proc %i", row, myid);
       multiplier = A[row][norm] / A[norm][norm];
       for (col = norm; col < N; col++) {
 	    A[row][col] -= A[norm][col] * multiplier;
@@ -175,9 +174,8 @@ int main(int argc, char **argv) {
       B[row] -= B[norm] * multiplier;
     }
     for (row = norm + 1; row < N; row ++){
-      printf("row %i from proc %i", row, (row-norm+1) % numprocs);
-      MPI_Bcast(&A[row], MAXN, MPI_FLOAT, (row-norm+1) % numprocs, MPI_COMM_WORLD);
-      MPI_Bcast(&B[row], 1, MPI_FLOAT, (row-norm+1) % numprocs, MPI_COMM_WORLD);
+      MPI_Bcast(&A[row], MAXN, MPI_FLOAT, (row-(norm+1)) % numprocs, MPI_COMM_WORLD);
+      MPI_Bcast(&B[row], 1, MPI_FLOAT, (row-(norm+1)) % numprocs, MPI_COMM_WORLD);
     }
 
   }
