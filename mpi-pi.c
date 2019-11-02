@@ -17,11 +17,11 @@ char *argv[];
     printf ("Hello from task %d of %d !\n", myid, maxrank);
     while (!done)
     {
-	if (myid == 0) {
+	if (myid == maxrank) {
 	    printf("Enter the number of intervals: (0 quits) ");
 	    scanf("%d",&n);
 	}
-	MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Bcast(&n, 1, MPI_INT, maxrank, MPI_COMM_WORLD);
 	if (n == 0) break;
   
 	h   = 1.0 / (double) n;
