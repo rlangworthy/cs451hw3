@@ -118,7 +118,8 @@ void print_X() {
 
 void verify() {
   float sol;
-  for(int i = 0; i < N; i++){
+  int i;
+  for(i = 0; i < N; i++){
     sol += A[0][i] * X[i];
   }
   printf("A[0]*X = %5.2f\nB[0] = %5.2f\n", sol, B[0]);
