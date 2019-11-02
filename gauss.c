@@ -132,7 +132,7 @@ int main(int argc, char **argv) {
   unsigned long long usecstart, usecstop;
   struct tms cputstart, cputstop;  /* CPU times for my processes */
   double etstart, etstop;
-  printf("Hello");
+
   MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
   MPI_Comm_rank(MPI_COMM_WORLD,&myid);
@@ -148,6 +148,7 @@ int main(int argc, char **argv) {
 
     etstart = MPI_Wtime();
   }
+  MPI_Barrier(MPI_COMM_WORLD);
   /* Start Clock */
 
   /* Gaussian Elimination */
@@ -221,6 +222,7 @@ void gauss() {
 
     MPI_Barrier(MPI_COMM_WORLD);
   }
+  MPI_Barrier(MPI_COMM_WORLD)
   /* (Diagonal elements are not normalized to 1.  This is treated in back
    * substitution.)
    */
