@@ -195,7 +195,7 @@ void gauss(int argc, char **argv) {
   if(myid == 0) {
       printf("Computing.\n");
       }
-  MPI_Bcast(&N[0][0], MAXN*MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&(N[0][0]), MAXN*MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
   MPI_Bcast(&B, MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
   
   /* Gaussian elimination */
@@ -206,8 +206,8 @@ void gauss(int argc, char **argv) {
 	    A[row][col] -= A[norm][col] * multiplier;
       }
       B[row] -= B[norm] * multiplier;
-      MPI_Bcast(&N[row], MAXN, MPI_FLOAT, myid, MPI_COMM_WORLD);
-      MPI_Bcast(&B[row], 1, MPI_FLOAT, myid, MPI_COMM_WORLD);
+      MPI_Bcast(&(N[row]), MAXN, MPI_FLOAT, myid, MPI_COMM_WORLD);
+      MPI_Bcast(&(B[row]), 1, MPI_FLOAT, myid, MPI_COMM_WORLD);
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
