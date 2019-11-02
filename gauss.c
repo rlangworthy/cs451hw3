@@ -208,7 +208,7 @@ void gauss() {
   MPI_Bcast(&A[0][0], MAXN*MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
   MPI_Bcast(&B, MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
   /* Gaussian elimination */
-  printf("hello %i\n", myid)
+  printf("hello %i\n", myid);
   for (norm = 0; norm < N - 1; norm++) {
     for (row = norm + 1 + myid; row < N; row += numprocs) {
       multiplier = A[row][norm] / A[norm][norm];
