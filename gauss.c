@@ -222,7 +222,7 @@ void gauss() {
 
     MPI_Barrier(MPI_COMM_WORLD);
   }
-  MPI_Barrier(MPI_COMM_WORLD)
+  MPI_Barrier(MPI_COMM_WORLD);
   /* (Diagonal elements are not normalized to 1.  This is treated in back
    * substitution.)
    */
