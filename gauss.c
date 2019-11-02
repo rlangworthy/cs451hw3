@@ -164,7 +164,7 @@ int main(int argc, char **argv) {
   /* Gaussian elimination */
   printf("hello %i\n", myid);
   for (norm = 0; norm < N - 1; norm++) {
-    MPI_Barrier(MPI_COMM_WORLD)
+    MPI_Barrier(MPI_COMM_WORLD);
     for (row = norm + 1 + myid; row < N; row += numprocs) {
       multiplier = A[row][norm] / A[norm][norm];
       for (col = norm; col < N; col++) {
