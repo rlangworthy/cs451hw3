@@ -163,9 +163,9 @@ int main(int argc, char **argv) {
   MPI_Bcast(&B, MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
   /* Gaussian elimination */
   printf("hello %i\n", myid);
-  for (norm = 0; norm < N - 1; norm++) {
-    MPI_Barrier(MPI_COMM_WORLD);
+  for(norm = 0; norm < N - 1; norm++) {
     for (row = norm + 1 + myid; row < N; row += numprocs) {
+      printf("%i\n", row);
       multiplier = A[row][norm] / A[norm][norm];
       for (col = norm; col < N; col++) {
 	    A[row][col] -= A[norm][col] * multiplier;
