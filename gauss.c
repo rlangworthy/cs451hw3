@@ -207,7 +207,6 @@ void gauss() {
   }
   MPI_Bcast(&A[0][0], MAXN*MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
   MPI_Bcast(&B, MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
-  printf("broadcasted.\n");
   /* Gaussian elimination */
   for (norm = 0; norm < N - 1; norm++) {
     for (row = norm + 1 + myid; row < N; row += numprocs) {
@@ -220,9 +219,9 @@ void gauss() {
       MPI_Bcast(&B[row], 1, MPI_FLOAT, myid, MPI_COMM_WORLD);
     }
 
-    MPI_Barrier(MPI_COMM_WORLD);
+    //MPI_Barrier(MPI_COMM_WORLD);
   }
-  MPI_Barrier(MPI_COMM_WORLD);
+  //MPI_Barrier(MPI_COMM_WORLD);
   /* (Diagonal elements are not normalized to 1.  This is treated in back
    * substitution.)
    */
