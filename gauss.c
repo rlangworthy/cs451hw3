@@ -218,6 +218,7 @@ void gauss() {
       MPI_Bcast(&A[row], MAXN, MPI_FLOAT, myid, MPI_COMM_WORLD);
       MPI_Bcast(&B[row], 1, MPI_FLOAT, myid, MPI_COMM_WORLD);
     }
+    printf("I got here %i\n", myid);
     MPI_Barrier(MPI_COMM_WORLD);
   }
   //MPI_Barrier(MPI_COMM_WORLD);
