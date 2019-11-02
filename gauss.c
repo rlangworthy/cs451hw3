@@ -176,7 +176,7 @@ int main(int argc, char **argv) {
       MPI_Bcast(&A[row], MAXN, MPI_FLOAT, (row-norm+1) % numprocs, MPI_COMM_WORLD);
       MPI_Bcast(&B[row], 1, MPI_FLOAT, (row-norm+1) % numprocs, MPI_COMM_WORLD);
     }
-    MPI_Barrier(MPI_COMM_WORLD);
+
   }
 
   /* (Diagonal elements are not normalized to 1.  This is treated in back
