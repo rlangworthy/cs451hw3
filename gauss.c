@@ -187,7 +187,7 @@ void gauss(int argc, char **argv) {
   float multiplier;
   double etstart, etstop;  /* Elapsed times using gettimeofday() */
 
-  MPI_init(&argc, &argv);
+  MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
   MPI_Comm_rank(MPI_COMM_WORLD,&myid);
   etstart = MPI_Wtime();
