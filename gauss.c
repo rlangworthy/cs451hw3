@@ -169,9 +169,12 @@ int main(int argc, char **argv) {
 	    A[row][col] -= A[norm][col] * multiplier;
       }
       B[row] -= B[norm] * multiplier;
+    }
+    for (row = norm + 1 + myid; row < N; row += numprocs){
       MPI_Bcast(&A[row], MAXN, MPI_FLOAT, myid, MPI_COMM_WORLD);
       MPI_Bcast(&B[row], 1, MPI_FLOAT, myid, MPI_COMM_WORLD);
     }
+
   }
 
   /* (Diagonal elements are not normalized to 1.  This is treated in back
