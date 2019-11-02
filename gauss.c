@@ -180,7 +180,7 @@ int main(int argc, char **argv) {
     }
 
   }
-  printf("%i after loop \n", myid)
+  printf("%i after loop \n", myid);
 
   /* (Diagonal elements are not normalized to 1.  This is treated in back
    * substitution.)
