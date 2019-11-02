@@ -148,59 +148,13 @@ int main(int argc, char **argv) {
 
     etstart = MPI_Wtime();
   }
-  MPI_Barrier(MPI_COMM_WORLD);
   /* Start Clock */
 
   /* Gaussian Elimination */
-  gauss();
-
-  /* Stop Clock */
-
-  if(myid==0){
-    etstop = MPI_Wtime();
-    printf("Time Elapsed: %1.2f\n", etstop-etstart);
-    /* Display output */
-    print_X();
-
-    verify();
-
-    /* Display timing results 
-    printf("\nElapsed time = %g ms.\n",
-        (float)(usecstop - usecstart)/(float)1000);
-
-    printf("(CPU times are accurate to the nearest %g ms)\n",
-        1.0/(float)CLOCKS_PER_SEC * 1000.0);
-    printf("My total CPU time for parent = %g ms.\n",
-        (float)( (cputstop.tms_utime + cputstop.tms_stime) -
-            (cputstart.tms_utime + cputstart.tms_stime) ) /
-        (float)CLOCKS_PER_SEC * 1000);
-    printf("My system CPU time for parent = %g ms.\n",
-        (float)(cputstop.tms_stime - cputstart.tms_stime) /
-        (float)CLOCKS_PER_SEC * 1000);
-    printf("My total CPU time for child processes = %g ms.\n",
-        (float)( (cputstop.tms_cutime + cputstop.tms_cstime) -
-            (cputstart.tms_cutime + cputstart.tms_cstime) ) /
-        (float)CLOCKS_PER_SEC * 1000);
-    Contrary to the man pages, this appears not to include the parent */
-    printf("--------------------------------------------\n");}
-  MPI_Finalize();
-  exit(0);
-}
-
-/* ------------------ Above Was Provided --------------------- */
-
-/****** You will replace this routine with your own parallel version *******/
-/* Provided global variables are MAXN, N, A[][], B[], and X[],
- * defined in the beginning of this code.  X[] is initialized to zeros.
- */
-void gauss() {
-  int norm, row, col, myid, numprocs;  /* Normalization row, and zeroing
+  int norm, row, col;  /* Normalization row, and zeroing
 			* element row and col */
   float multiplier;
     /* Elapsed times using gettimeofday() */
-
-  MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD,&myid);
 
   if(myid == 0) {
       printf("Computing.\n");
@@ -235,4 +189,36 @@ void gauss() {
         X[row] /= A[row][row];
     }
   }
+
+  /* Stop Clock */
+
+  if(myid==0){
+    etstop = MPI_Wtime();
+    printf("Time Elapsed: %1.2f\n", etstop-etstart);
+    /* Display output */
+    print_X();
+
+    verify();
+
+    /* Display timing results 
+    printf("\nElapsed time = %g ms.\n",
+        (float)(usecstop - usecstart)/(float)1000);
+
+    printf("(CPU times are accurate to the nearest %g ms)\n",
+        1.0/(float)CLOCKS_PER_SEC * 1000.0);
+    printf("My total CPU time for parent = %g ms.\n",
+        (float)( (cputstop.tms_utime + cputstop.tms_stime) -
+            (cputstart.tms_utime + cputstart.tms_stime) ) /
+        (float)CLOCKS_PER_SEC * 1000);
+    printf("My system CPU time for parent = %g ms.\n",
+        (float)(cputstop.tms_stime - cputstart.tms_stime) /
+        (float)CLOCKS_PER_SEC * 1000);
+    printf("My total CPU time for child processes = %g ms.\n",
+        (float)( (cputstop.tms_cutime + cputstop.tms_cstime) -
+            (cputstart.tms_cutime + cputstart.tms_cstime) ) /
+        (float)CLOCKS_PER_SEC * 1000);
+    Contrary to the man pages, this appears not to include the parent */
+    printf("--------------------------------------------\n");}
+  MPI_Finalize();
+  exit(0);
 }
