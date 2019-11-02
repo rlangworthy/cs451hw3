@@ -159,10 +159,13 @@ int main(int argc, char **argv) {
   if(myid == 0) {
       printf("Computing.\n");
   }
+  printf("hello from %i before bcast\n", myid);
   MPI_Bcast(&A[0][0], MAXN*MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
   MPI_Bcast(&B, MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
   /* Gaussian elimination */
+  printf("hello from %i after bcast\n", myid);
   for(norm = 0; norm < N - 1; norm++) {
+    printf("%i in loop\n", myid);
     for (row = norm + 1 + myid; row < N; row += numprocs) {
       multiplier = A[row][norm] / A[norm][norm];
       for (col = norm; col < N; col++) {
