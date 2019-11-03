@@ -185,7 +185,7 @@ int main(int argc, char **argv) {
     }
 
     for (row = norm + 1 + bdispl[myid]; row < norm + 1 + bdispl[myid] + bcounts[myid]; row ++) {
-        printf("row %i norm %i on %i, chunk size %i, displ %i, %i\n", row, norm, myid, bcounts[myid], bdispl[myid], (N-(norm+1))%numprocs);
+        printf("row %i norm %i on %i, B %f\n", row, norm, myid, B[row]);
         multiplier = A[row][norm] / A[norm][norm];
         for (col = norm; col < N; col++) {
             A[row][col] -= A[norm][col] * multiplier;
