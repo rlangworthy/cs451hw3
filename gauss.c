@@ -185,13 +185,13 @@ int main(int argc, char **argv) {
     }
 
     for (row = norm + 1 + bdispl[myid]; row < norm + 1 + bdispl[myid] + bcounts[myid]; row ++) {
-        printf("row %i norm %i on %i, B %f\n", row, norm, myid, B[row]);
         multiplier = A[row][norm] / A[norm][norm];
         for (col = norm; col < N; col++) {
             A[row][col] -= A[norm][col] * multiplier;
         }
         B[row] -= B[norm] * multiplier;
     }
+    printf("gathering a %i b %i from %i\n", acounts[myid], bcounts[myid], myid)
     if(myid==0){
         MPI_Gatherv(MPI_IN_PLACE, acounts[myid], MPI_FLOAT, &A[norm+1][0], acounts, adispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
         MPI_Gatherv(MPI_IN_PLACE, bcounts[myid], MPI_FLOAT, &B[norm+1], bcounts, bdispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
