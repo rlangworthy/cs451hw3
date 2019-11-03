@@ -177,11 +177,11 @@ int main(int argc, char **argv) {
     bcounts[numprocs-1] += ((N-(norm+1))%numprocs);
     acounts[numprocs-1] = bcounts[numprocs-1] * MAXN;
     if(myid==0){
-        MPI_Scatterv(&A[norm][0], acounts, adispl, MPI_FLOAT, MPI_IN_PLACE, acounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
-        MPI_Scatterv(&B[norm], bcounts, bdispl, MPI_FLOAT, MPI_IN_PLACE, bcounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
+        MPI_Scatterv(&A[norm+1][0], acounts, adispl, MPI_FLOAT, MPI_IN_PLACE, acounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
+        MPI_Scatterv(&B[norm+1], bcounts, bdispl, MPI_FLOAT, MPI_IN_PLACE, bcounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
     }else {
-        MPI_Scatterv(&A[norm][0], acounts, adispl, MPI_FLOAT, &A[bdispl[myid]][0], acounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
-        MPI_Scatterv(&B[norm], bcounts, bdispl, MPI_FLOAT, &B[bdispl[myid]], bcounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
+        MPI_Scatterv(&A[norm+1][0], acounts, adispl, MPI_FLOAT, &A[norm + 1 + bdispl[myid]][0], acounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
+        MPI_Scatterv(&B[norm+1], bcounts, bdispl, MPI_FLOAT, &B[norm + 1 + bdispl[myid]], bcounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
     }
 
     for (row = norm + 1 + bdispl[myid]; row < norm + 1 + bdispl[myid] + bcounts[myid]; row ++) {
@@ -193,11 +193,11 @@ int main(int argc, char **argv) {
         B[row] -= B[norm] * multiplier;
     }
     if(myid==0){
-        MPI_Gatherv(MPI_IN_PLACE, acounts[myid], MPI_FLOAT, &A[norm][0], acounts, adispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
-        MPI_Gatherv(MPI_IN_PLACE, bcounts[myid], MPI_FLOAT, &B[norm], bcounts, bdispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
+        MPI_Gatherv(MPI_IN_PLACE, acounts[myid], MPI_FLOAT, &A[norm+1][0], acounts, adispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
+        MPI_Gatherv(MPI_IN_PLACE, bcounts[myid], MPI_FLOAT, &B[norm+1], bcounts, bdispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
     }else{
-        MPI_Gatherv(&A[bdispl[myid]][0], acounts[myid], MPI_FLOAT, &A[norm][0], acounts, adispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
-        MPI_Gatherv(&B[bdispl[myid]], bcounts[myid], MPI_FLOAT, &B[norm], bcounts, bdispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
+        MPI_Gatherv(&A[norm + 1 + bdispl[myid]][0], acounts[myid], MPI_FLOAT, &A[norm+1][0], acounts, adispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
+        MPI_Gatherv(&B[norm + 1 + bdispl[myid]], bcounts[myid], MPI_FLOAT, &B[norm+1], bcounts, bdispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
     }
   }
 
