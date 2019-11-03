@@ -160,15 +160,13 @@ int main(int argc, char **argv) {
       printf("Computing.\n");
   }
 
-  MPI_Bcast(&A[0][0], MAXN*MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
-  MPI_Bcast(&B, MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
   MPI_Bcast(&N, 1, MPI_INT, 0, MPI_COMM_WORLD);
   /* Gaussian elimination */
   for(norm = 0; norm < N - 1; norm++) {
     int acounts[numprocs],bcounts[numprocs], adispl[numprocs], bdispl[numprocs];
     int i, offset, div;
     div = (N-norm)/numprocs;
-    offset = 0
+    offset = 0;
     for(i =0;i < numprocs;i++){
         bdispl[i] = offset;
         bcounts[i] = div;
