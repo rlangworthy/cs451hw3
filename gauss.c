@@ -184,7 +184,7 @@ int main(int argc, char **argv) {
         MPI_Scatterv(&B[norm], bcounts, bdispl, MPI_FLOAT, &B[bdispl[myid]], bcounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
     }
 
-    for (row = norm + 1 + bdispl[myid]; row < norm + 1 + bdispl[myid] + bcounts[myid]; row ++) {
+    for (row = norm + 1 + bdispl[myid]; row < norm + bdispl[myid] + bcounts[myid]; row ++) {
         printf("row %i norm %i on %i, chunk size %i, div %i, %i\n", row, norm, myid, bcounts[myid], div, (N-norm)%numprocs);
         multiplier = A[row][norm] / A[norm][norm];
         for (col = norm; col < N; col++) {
