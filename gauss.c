@@ -165,7 +165,7 @@ int main(int argc, char **argv) {
   for(norm = 0; norm < N - 1; norm++) {
     int acounts[numprocs],bcounts[numprocs], adispl[numprocs], bdispl[numprocs];
     int i, offset, div;
-    div = (N-norm)/numprocs;
+    div = (N-(norm+1))/numprocs;
     offset = 0;
     for(i =0;i < numprocs;i++){
         bdispl[i] = offset;
