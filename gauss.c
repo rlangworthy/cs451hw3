@@ -176,6 +176,7 @@ int main(int argc, char **argv) {
     }
     bcounts[numprocs-1] += (div%numprocs);
     acounts[numprocs-1] = bcounts[numprocs-1] * MAXN;
+    printf("%i\n",div);
     if(myid==0){
         MPI_Scatterv(&A[norm][0], acounts, adispl, MPI_FLOAT, MPI_IN_PLACE, acounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
         MPI_Scatterv(&B[norm], bcounts, bdispl, MPI_FLOAT, MPI_IN_PLACE, bcounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
