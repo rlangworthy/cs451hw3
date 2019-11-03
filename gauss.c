@@ -191,7 +191,11 @@ int main(int argc, char **argv) {
         }
         B[row] -= B[norm] * multiplier;
     }
-    printf("gathering a %i b %i from %i\n", acounts[myid], bcounts[myid], myid);
+    printf("B from %i, norm %i:\n", myid, norm);
+    for (col = 0; col < N; col++) {
+      printf("%5.2f%s", B[col], (col < N-1) ? "; " : "]\n");
+    }
+
     if(myid==0){
         MPI_Gatherv(MPI_IN_PLACE, acounts[myid], MPI_FLOAT, &A[norm+1][0], acounts, adispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
         MPI_Gatherv(MPI_IN_PLACE, bcounts[myid], MPI_FLOAT, &B[norm+1], bcounts, bdispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
