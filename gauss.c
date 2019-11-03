@@ -167,14 +167,14 @@ int main(int argc, char **argv) {
     int i, offset, div;
     div = (N-(norm+1))/numprocs;
     offset = 0;
-    for(i =0;i < numprocs;i++){
+    for(i = 0;i < numprocs;i++){
         bdispl[i] = offset;
         bcounts[i] = div;
         offset += bcounts[i];
         acounts[i] = bcounts[i] * MAXN;
         adispl[i] = bdispl[i] * MAXN;
     }
-    bcounts[numprocs-1] += ((N-norm)%numprocs);
+    bcounts[numprocs-1] += ((N-(norm+1))%numprocs);
     acounts[numprocs-1] = bcounts[numprocs-1] * MAXN;
     if(myid==0){
         MPI_Scatterv(&A[norm][0], acounts, adispl, MPI_FLOAT, MPI_IN_PLACE, acounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
@@ -184,8 +184,8 @@ int main(int argc, char **argv) {
         MPI_Scatterv(&B[norm], bcounts, bdispl, MPI_FLOAT, &B[bdispl[myid]], bcounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
     }
 
-    for (row = norm + 1 + bdispl[myid]; row < norm + bdispl[myid] + bcounts[myid]; row ++) {
-        printf("row %i norm %i on %i, chunk size %i, div %i, %i\n", row, norm, myid, bcounts[myid], div, (N-norm)%numprocs);
+    for (row = norm + 1 + bdispl[myid]; row < norm + 1 + bdispl[myid] + bcounts[myid]; row ++) {
+        printf("row %i norm %i on %i, chunk size %i, displ %i, %i\n", row, norm, myid, bcounts[myid], bdispl[myid], (N-(norm+1))%numprocs);
         multiplier = A[row][norm] / A[norm][norm];
         for (col = norm; col < N; col++) {
             A[row][col] -= A[norm][col] * multiplier;
