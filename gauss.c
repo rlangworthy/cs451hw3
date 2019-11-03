@@ -165,19 +165,33 @@ int main(int argc, char **argv) {
   MPI_Bcast(&N, 1, MPI_INT, 0, MPI_COMM_WORLD);
   /* Gaussian elimination */
   for(norm = 0; norm < N - 1; norm++) {
-    //MPI_Barrier(MPI_COMM_WORLD);
-    for (row = norm + 1 + myid; row < N; row += numprocs) {
-      multiplier = A[row][norm] / A[norm][norm];
-      for (col = norm; col < N; col++) {
-	    A[row][col] -= A[norm][col] * multiplier;
-      }
-      B[row] -= B[norm] * multiplier;
+    int acounts[numprocs],bcounts[numprocs], adispl[numprocs], bdispl[numprocs];
+    int i, offset, div;
+    div = (N-norm)/numprocs;
+    offset = 0
+    for(i =0;i < numprocs;i++){
+        bdispl[i] = offset;
+        bcounts[i] = div;
+        offset += bcounts[i];
+        acounts[i] = bcounts[i] * MAXN;
+        adispl[i] = bdispl[i] * MAXN;
     }
-    for (row = norm + 1; row < N; row ++){
-      MPI_Bcast(&A[row], MAXN, MPI_FLOAT, (row-(norm+1)) % numprocs, MPI_COMM_WORLD);
-      MPI_Bcast(&B[row], 1, MPI_FLOAT, (row-(norm+1)) % numprocs, MPI_COMM_WORLD);
-    }
+    bcounts[numprocs-1] += (div%numprocs);
+    acounts[numprocs-1] = bcounts[numprocs-1] * MAXN;
 
+    MPI_Scatterv(&A[norm][0], acounts, adispl, MPI_FLOAT, &A[bdispl[myid]][0], acounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(&B[norm], bcounts, bdispl, MPI_FLOAT, &B[bdispl[myid]], bcounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
+
+    for (row = norm + 1 + bdispl[myid]; row < norm + 1 + bdispl[myid] + bcounts[myid]; row ++) {
+        multiplier = A[row][norm] / A[norm][norm];
+        for (col = norm; col < N; col++) {
+            A[row][col] -= A[norm][col] * multiplier;
+        }
+        B[row] -= B[norm] * multiplier;
+    }
+    
+    MPI_Gatherv(&A[bdispl[myid]][0], acounts[myid], MPI_FLOAT, &A[norm][0], acounts, adispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(&B[bdispl[myid]], bcounts[myid], MPI_FLOAT, &B[norm], bcounts, bdispl, MPI_FLOAT, 0, MPI_COMM_WORLD);
   }
 
   /* (Diagonal elements are not normalized to 1.  This is treated in back
