@@ -179,6 +179,13 @@ int main(int argc, char **argv) {
     if(myid == 0){
         B[MAXN] = A[norm][norm];
     }
+    if(myid==0){
+        printf("B on norm %i\n", norm);
+        for (col = 0; col < N; col++) {
+            printf("%5.2f%s", B[col], (col < N-1) ? "; " : "]\n");
+        }
+        printf("A[norm][norm] %f\n", B[MAXN])
+    }
     MPI_Bcast(&B, MAXN+1, MPI_FLOAT, 0, MPI_COMM_WORLD);
     if(myid==0){
         MPI_Scatterv(&A[norm+1][0], acounts, adispl, MPI_FLOAT, MPI_IN_PLACE, acounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
