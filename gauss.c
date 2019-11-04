@@ -21,7 +21,7 @@
 int N;  /* Matrix size */
 
 /* Matrices and vectors */
-float A[MAXN][MAXN], B[MAXN], X[MAXN], R[MAXN][MAXN];
+float A[MAXN][MAXN], B[MAXN +1], X[MAXN], R[MAXN][MAXN];
 /* A * X = B, solve for X */
 
 /* junk */
@@ -176,7 +176,10 @@ int main(int argc, char **argv) {
     }
     bcounts[numprocs-1] += ((N-(norm+1))%numprocs);
     acounts[numprocs-1] = bcounts[numprocs-1] * MAXN;
-    MPI_Bcast(&B, MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
+    if(myid == 0){
+        B[MAXN] = A[norm][norm];
+    }
+    MPI_Bcast(&B, MAXN+1, MPI_FLOAT, 0, MPI_COMM_WORLD);
     if(myid==0){
         MPI_Scatterv(&A[norm+1][0], acounts, adispl, MPI_FLOAT, MPI_IN_PLACE, acounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
     }else {
@@ -184,7 +187,7 @@ int main(int argc, char **argv) {
     }
 
     for (row = norm + 1 + bdispl[myid]; row < norm + 1 + bdispl[myid] + bcounts[myid]; row ++) {
-        multiplier = A[row][norm] / A[norm][norm];
+        multiplier = A[row][norm] / B[MAXN];
         for (col = norm; col < N; col++) {
             A[row][col] -= A[norm][col] * multiplier;
         }
