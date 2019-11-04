@@ -176,12 +176,11 @@ int main(int argc, char **argv) {
     }
     bcounts[numprocs-1] += ((N-(norm+1))%numprocs);
     acounts[numprocs-1] = bcounts[numprocs-1] * MAXN;
+    MPI_Bcast(&B, MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
     if(myid==0){
         MPI_Scatterv(&A[norm+1][0], acounts, adispl, MPI_FLOAT, MPI_IN_PLACE, acounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
-        MPI_Scatterv(&B[norm+1], bcounts, bdispl, MPI_FLOAT, MPI_IN_PLACE, bcounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
     }else {
         MPI_Scatterv(&A[norm+1][0], acounts, adispl, MPI_FLOAT, &A[norm + 1 + bdispl[myid]][0], acounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
-        MPI_Scatterv(&B[norm+1], bcounts, bdispl, MPI_FLOAT, &B[norm + 1 + bdispl[myid]], bcounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
     }
 
     for (row = norm + 1 + bdispl[myid]; row < norm + 1 + bdispl[myid] + bcounts[myid]; row ++) {
