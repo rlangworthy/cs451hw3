@@ -14,7 +14,6 @@ char *argv[];
     MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD,&myid);
     maxrank=numprocs-1;
-    printf ("Hello from task %d of %d !\n", myid, maxrank);
     while (!done)
     {
 	if (myid == 0) {
@@ -38,6 +37,7 @@ char *argv[];
 	if (myid == maxrank)
 	    printf("pi is approximately %.16f, Error is %.16f\n",
 		   pi, fabs(pi - PI25DT));
+    MPI_Barrier(MPI_COMM_WORLD)
     }
     MPI_Finalize();
     return 0;
