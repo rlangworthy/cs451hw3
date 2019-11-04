@@ -21,7 +21,7 @@
 int N;  /* Matrix size */
 
 /* Matrices and vectors */
-float A[MAXN][MAXN], B[MAXN +1], X[MAXN], R[MAXN][MAXN];
+float A[MAXN][MAXN], B[MAXN], X[MAXN], R[MAXN][MAXN];
 /* A * X = B, solve for X */
 
 /* junk */
@@ -162,6 +162,17 @@ int main(int argc, char **argv) {
 
   MPI_Bcast(&N, 1, MPI_INT, 0, MPI_COMM_WORLD);
   /* Gaussian elimination */
+  
+  /*
+    This algorithm divides the remaining rows that need to be worked on among
+    available processors before sending those rows out with a scatter.  The 
+    norm row and the solution array (B) are sent out via broadcast before the
+    data rows are sent to their processors.  After the necessary operations are
+    performed the results are gathered in the root.
+
+    The split is performed to attempt to minimize the number of messages sent
+    with each processor getting roughly similar numbers of rows to do work on.    
+  */
   for(norm = 0; norm < N - 1; norm++) {
     int acounts[numprocs],bcounts[numprocs], adispl[numprocs], bdispl[numprocs];
     int i, offset, div;
@@ -176,17 +187,8 @@ int main(int argc, char **argv) {
     }
     bcounts[numprocs-1] += ((N-(norm+1))%numprocs);
     acounts[numprocs-1] = bcounts[numprocs-1] * MAXN;
-    if(myid == 0){
-        B[MAXN] = A[norm][norm];
-    }
-    if(myid==-1){
-        printf("B on norm %i\n", norm);
-        for (col = 0; col < N; col++) {
-            printf("%5.2f%s", B[col], (col < N-1) ? "; " : "]\n");
-        }
-        printf("A[norm][norm] %f\n", B[MAXN]);
-    }
-    MPI_Bcast(&B, MAXN+1, MPI_FLOAT, 0, MPI_COMM_WORLD);
+
+    MPI_Bcast(&B, MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&A[norm][0], MAXN, MPI_FLOAT, 0, MPI_COMM_WORLD);
     if(myid==0){
         MPI_Scatterv(&A[norm+1][0], acounts, adispl, MPI_FLOAT, MPI_IN_PLACE, acounts[myid], MPI_FLOAT, 0, MPI_COMM_WORLD);
@@ -195,7 +197,7 @@ int main(int argc, char **argv) {
     }
 
     for (row = norm + 1 + bdispl[myid]; row < norm + 1 + bdispl[myid] + bcounts[myid]; row ++) {
-        multiplier = A[row][norm] / B[MAXN];
+        multiplier = A[row][norm] / A[norm][norm];
         for (col = norm; col < N; col++) {
             A[row][col] -= A[norm][col] * multiplier;
         }
