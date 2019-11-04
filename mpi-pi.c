@@ -37,7 +37,6 @@ char *argv[];
 	if (myid == maxrank)
 	    printf("pi is approximately %.16f, Error is %.16f\n",
 		   pi, fabs(pi - PI25DT));
-    MPI_Barrier(MPI_COMM_WORLD);
     }
     MPI_Finalize();
     return 0;
