@@ -184,7 +184,7 @@ int main(int argc, char **argv) {
         for (col = 0; col < N; col++) {
             printf("%5.2f%s", B[col], (col < N-1) ? "; " : "]\n");
         }
-        printf("A[norm][norm] %f\n", B[MAXN])
+        printf("A[norm][norm] %f\n", B[MAXN]);
     }
     MPI_Bcast(&B, MAXN+1, MPI_FLOAT, 0, MPI_COMM_WORLD);
     if(myid==0){
