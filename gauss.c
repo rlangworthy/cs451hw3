@@ -168,7 +168,7 @@ int main(int argc, char **argv) {
     available processors before sending those rows out with a scatter.  The 
     norm row and the solution array (B) are sent out via broadcast before the
     data rows are sent to their processors.  After the necessary operations are
-    performed the results are gathered in the root.
+    performed the results are gathered in the root before the next iteration.
 
     The split is performed to attempt to minimize the number of messages sent
     with each processor getting roughly similar numbers of rows to do work on.    
@@ -238,25 +238,8 @@ int main(int argc, char **argv) {
 
     verify();
 
-    /* Display timing results 
-    printf("\nElapsed time = %g ms.\n",
-        (float)(usecstop - usecstart)/(float)1000);
-
-    printf("(CPU times are accurate to the nearest %g ms)\n",
-        1.0/(float)CLOCKS_PER_SEC * 1000.0);
-    printf("My total CPU time for parent = %g ms.\n",
-        (float)( (cputstop.tms_utime + cputstop.tms_stime) -
-            (cputstart.tms_utime + cputstart.tms_stime) ) /
-        (float)CLOCKS_PER_SEC * 1000);
-    printf("My system CPU time for parent = %g ms.\n",
-        (float)(cputstop.tms_stime - cputstart.tms_stime) /
-        (float)CLOCKS_PER_SEC * 1000);
-    printf("My total CPU time for child processes = %g ms.\n",
-        (float)( (cputstop.tms_cutime + cputstop.tms_cstime) -
-            (cputstart.tms_cutime + cputstart.tms_cstime) ) /
-        (float)CLOCKS_PER_SEC * 1000);
-    Contrary to the man pages, this appears not to include the parent */
-    printf("--------------------------------------------\n");}
+    printf("--------------------------------------------\n");
+  }
   MPI_Finalize();
   exit(0);
 }
